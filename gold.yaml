@@ -1,0 +1,60 @@
+supercell: 
+    file: my_new_traj.xyz                                              
+    format: extxyz
+    index: 0
+    replicate: [1, 1, 1]                                                        
+    jitter: 0.0                                                                 
+
+flare_calc:
+    gp: SGP_Wrapper
+    kernels:
+        - name: NormalizedDotProduct
+          sigma: 2
+          power: 2
+    descriptors:
+        - name: B2
+          nmax: 8
+          lmax: 3
+          cutoff_function: quadratic
+          radial_basis: chebyshev
+          cutoff_matrix: [[5.0]]
+    energy_noise: 0.1
+    forces_noise: 0.05
+    stress_noise: 0.001
+    species:
+        - 13
+    single_atom_energies:
+        - 0
+    cutoff: 5.0
+    variance_type: local
+    max_iterations: 20
+    use_mapping: True
+
+dft_calc:
+    name: FakeDFT                                                               
+    kwargs: 
+        filename: my_new_traj.xyz                                                  
+        format: extxyz
+        index: ":"
+        io_kwargs: {}
+    params: {}
+
+otf: 
+    mode: fresh                                                                 
+    md_engine: Fake                                                             
+    md_kwargs: 
+        filenames: [my_new_traj.xyz]
+        format: extxyz
+        index: ":"
+        io_kwargs: {}
+    dt: 0.02                                                                   
+    number_of_steps: 100000                                                     
+    output_name: offline                                                        
+    init_atoms: [0, 151]                                                         
+    std_tolerance_factor: -0.01
+    max_atoms_added: -1
+    train_hyps: [0,inf]
+    write_model: 4
+    update_style: threshold
+    update_threshold: 0.001
+    force_only: False
